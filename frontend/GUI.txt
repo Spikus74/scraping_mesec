@@ -1,0 +1,9 @@
+linky:
+
+sorted by:
+trust factor + urgency
+                  
+                    | search for: 
+- top trust factor + urgency  | -> url
+.. 
+..

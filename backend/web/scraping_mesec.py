@@ -3,8 +3,8 @@ from bs4 import BeautifulSoup
 import numpy as np
 import re
 
-url = "https://www.mesec.cz"
-result = requests.get(url)
+URL = "https://www.mesec.cz"
+result = requests.get(URL)
 soup = BeautifulSoup(result.text, "html.parser")
 
 
