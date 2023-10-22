@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import scraping_mesec
+import unidecode
 
 def mesec():
     URL = "https://www.mesec.cz"
@@ -62,11 +63,30 @@ def uctovani():
     elem = [x.find("a") for x in found]
     links = [link.get("href") for link in elem]
     titles = [x.get_text() for x in elem]
-    final = {title:link for title,link in zip(titles,links)}
+    final = {(title,link) for title,link in zip(titles,links)}
     return final
+
+def businessinfo():
+    url = "https://www.businessinfo.cz/"
+    request = requests.get(url)
+    soup = BeautifulSoup(request.text, "html.parser")
+    links = [link.get("href") for link in soup.find_all("a", href=True)]
+    filtered_links = [link for link in links if "businessinfo.cz/clanky/" in link]
+    final_links = filtered_links[2:]
+
+    title = soup.find_all("span",class_="title-text")
+    for x in title:
+        nex = unidecode(x)
+        title[title.index(x)] = nex
+    pretitles = [t.text for t in title]
+    final_titles = [x.encode("latin1").decode("utf-8") for x in pretitles]
+    final = [(title,link) for title,link in zip(final_titles,final_links)]
+    return final
+
 
 podn_final = podnikatel()
 mesec_final = mesec()
 ucto_final = uctovani()
+businessinfo_final = businessinfo()
 
-print(scraping_mesec.funcs.display_article(articles=ucto_final,num=0))
+print(scraping_mesec.funcs.display_article(articles=mesec_final,num=4))

@@ -70,5 +70,3 @@ for x in final:
         final.remove(x)
 
 print(myfunc.display_article(articles=final,num=0))
-
-
