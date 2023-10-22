@@ -1,9 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
-from scraping_mesec import *
+import scraping_mesec
 
+# CONFIG
 
-# CONFIG    
+  
 URL = "https://www.podnikatel.cz"
 result = requests.get(URL)
 soup = BeautifulSoup(result.text,"html.parser")
