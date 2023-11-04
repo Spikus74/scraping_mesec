@@ -85,8 +85,28 @@ def businessinfo():
     final = [(title,link) for title,link in zip(final_titles,final_links)]
     return final
 
+def mpo():
+    url = "https://www.mpo.cz/"
+    result = requests.get(url)
+    soup = BeautifulSoup(result.text,"html.parser")
+
+    elem = soup.find('div', class_='block_news_top').find_all("a")
+    links = [link.get("href") for link in elem]
+    links = links[1:-1][::3]
+    all_links = [url+x for x in links]
+
+    h3_element = soup.find_all("h3")
+    final_titles = []
+    for elem in h3_element:
+        if elem:
+            text = elem.text
+            final_titles.append(text.encode("latin1").decode("utf-8"))
+
+    final = [(title,link) for title,link in zip(final_titles,all_links)]
+    return final
+
 if __name__ == "__main__":
     instance = funcs()
-    print(instance.display_article(articles=uctovani(),num=1))
+    print(instance.display_article(articles=mpo(),num=1))
 
 
