@@ -68,5 +68,3 @@ myfunc = funcs()
 for x in final:
     if final.count(x) > 1:
         final.remove(x)
-
-print(myfunc.display_article(articles=final,num=0))

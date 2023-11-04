@@ -1,9 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
-import scraping_mesec
+from scraping_mesec import funcs
 import unidecode
 
+# backend.web.final_concept
 def mesec():
+    print ("scraping mesec.cz")
     URL = "https://www.mesec.cz"
     result = requests.get(URL)
     soup = BeautifulSoup(result.text, "html.parser")
@@ -36,6 +38,7 @@ def mesec():
 
 
 def podnikatel():
+    print ("scraping podnikatel.cz")
     URL = "https://www.podnikatel.cz"
     result = requests.get(URL)
     soup = BeautifulSoup(result.text,"html.parser")
@@ -58,13 +61,13 @@ def uctovani():
     url = "https://www.uctovani.net/clanky.php"
     received = requests.get(url)
     soup = BeautifulSoup(received.text,"html.parser")
-
-    found = soup.find_all("h3",class_="title")
-    elem = [x.find("a") for x in found]
-    links = [link.get("href") for link in elem]
-    titles = [x.get_text() for x in elem]
-    final = {(title,link) for title,link in zip(titles,links)}
+    h3_tags = soup.find_all('h3', class_='title')
+    concatter = "https://www.uctovani.net/"
+    links = [concatter+link.find('a')["href"] for link in h3_tags]
+    titles = [title.find("a").get_text() for title in h3_tags]
+    final = [(title,link) for title,link in zip(titles,links)]
     return final
+    
 
 def businessinfo():
     url = "https://www.businessinfo.cz/"
@@ -76,17 +79,14 @@ def businessinfo():
 
     title = soup.find_all("span",class_="title-text")
     for x in title:
-        nex = unidecode(x)
-        title[title.index(x)] = nex
-    pretitles = [t.text for t in title]
+        title[title.index(x)] = x
+    pretitles = [t for t in title]
     final_titles = [x.encode("latin1").decode("utf-8") for x in pretitles]
     final = [(title,link) for title,link in zip(final_titles,final_links)]
     return final
 
+if __name__ == "__main__":
+    instance = funcs()
+    print(instance.display_article(articles=uctovani(),num=1))
 
-podn_final = podnikatel()
-mesec_final = mesec()
-ucto_final = uctovani()
-businessinfo_final = businessinfo()
 
-print(scraping_mesec.funcs.display_article(articles=mesec_final,num=4))

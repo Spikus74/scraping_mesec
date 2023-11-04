@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from scraping_mesec import funcs
 
 def try_get_title(x):
     try:
@@ -8,7 +9,7 @@ def try_get_title(x):
         split = x.split('"')
         title = split[3]
         return True,title  # Success flag
-    except Exception as e:
+    except Exception:
         return False,False  # Error flag
 
 def polished(titles):
@@ -25,37 +26,31 @@ def polished(titles):
 url = "https://www.penize.cz/"
 result = requests.get(url)
 soup = BeautifulSoup(result.text,"html.parser")
-
 found = soup.find_all("div",class_="art")
 links = [x.find("a") for x in found]
-
 href = []
+titles = []
 for link in links:
     if link is not None:
         nlink = link.get("href")
-        href.append(nlink)
+        last = nlink.split("/")[-1]
+        first = last.split("-")[0]
+        try:
+            nirst = int(first)
+            if len(nlink) > 40:
+                href.append(nlink)
+        except:
+            pass
 
-for x in href:
-    last = x.split("/")[-1]
-    first = last.split("-")[0]
-    try:
-        first = int(first)
-    except:
-        href.pop(href.index(x))
-
-titles = []
-for x in links:
-    if not try_get_title(x)[0] and type(x) != type(None):   
-        title = x.get("h2")
+    if not try_get_title(link)[0] and type(link) != type(None):   
+        title = link.get("h2")
         titles.append(title)
     else:
-        titles.append(try_get_title(x)[1])
+        titles.append(try_get_title(link)[1])
 
-for x in href:
-    if len(x) < 40:
-        href.pop(href.index(x))
 
 final_titles = polished(titles)
-final = {title:link for title,link in zip(final_titles,href)}
-last_values = [value.split("/")[-1] for value in final.values()]   #just for testing
-print(pd.DataFrame(last_values,index=final.keys()))    #remove the dataframe for final version
+final = [(title,link) for title,link in zip(final_titles,href)]
+instance = funcs()
+#print(instance.display_article(articles=final,num=3))
+print(final)

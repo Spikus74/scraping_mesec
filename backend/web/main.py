@@ -10,9 +10,6 @@ result = requests.get(URL)
 soup = BeautifulSoup(result.text,"html.parser")
 
 
-
-
-
 found = soup.find_all("a", class_="design-article__heading design-article__link--major design-article__link--default design-article__link")
 final = list()
 links = [x.get("href") for x in found]
