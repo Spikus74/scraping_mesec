@@ -57,7 +57,7 @@ class funcs:
 
 
     def display_article(self,articles,num):
-        unit = articles[num]
+        unit = articles[num-1]
         result = requests.get(unit[1])
         soup = BeautifulSoup(result.text,"html.parser")
         text = soup.find_all("p")

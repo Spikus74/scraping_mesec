@@ -165,11 +165,11 @@ class final_cleaning():
     def kurzy(self):
         text = self.text.split("Další vybrané zprávy »:")
         return text[1]
-    
+     
 
 if __name__ == "__main__":
     instance = funcs()
-    func = kurzy()
+    func = businessinfo()
     num = 1
     title = func[num][0]
     text = display(instance,func,num=num)
